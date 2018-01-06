@@ -1,0 +1,84 @@
+<canvas id="can" width="640" height="480"></canvas>
+<script>
+
+	p1y = p2y = 150;
+	pt = 10;
+	ph = 100;
+	bx = 640/2;
+	by = 480/2;
+	bt = 9;
+	xv=yv=7;
+	score1=score2=0;
+
+	ai =4;
+
+
+
+	window.onload = function(){
+		c= document.getElementById('can');
+		cc= c.getContext('2d');
+		setInterval(update, 1000/30);
+
+		c.addEventListener('mousemove', function(e){
+			p1y = e.clientY - ph/2;
+		})
+	}
+
+	function reset(){
+		bx = c.width/2;
+		by = c.height/2;
+		xv = -xv;
+		yv = 3;
+	}
+
+	function update(){
+
+		bx += xv;
+		by += yv;
+
+		if (by > c.height && yv > 0) {
+			yv = -yv;
+		}
+		if (by < 0 && yv  < 0) {
+			yv = -yv;
+		}
+		if (bx < 0) {
+			if (by > p1y && by < p1y + ph) {
+				xv = -xv;
+				dt = by -(p1y+ph/2);
+				yv = dt*0.3;
+			}else{
+				score2++;
+				reset();
+			}
+		}
+
+		if (bx > c.width) {
+			if (by > p2y && by < p2y+ph) {
+				xv = -xv;
+				dt = by-(p2y+ph/2);
+				yv = dt*0.3;
+			}else{
+				score1++;
+				reset();
+			}
+		}
+		p2y = by - ph/2
+		// if (p2y+ph/2 < by) { //(p2y+ph/2) means the center of p2
+		// 	p2y+=ai;
+		// }else{
+		// 	p2y-=ai;
+		// }
+
+
+		cc.fillStyle = 'black';
+		cc.fillRect(0,0,c.width,c.height);
+		cc.fillStyle = 'white';
+		cc.fillRect(0,p1y,pt,ph);
+		cc.fillRect(c.width - pt, p2y, pt,ph);
+		cc.fillRect(bx,by,bt,bt);
+		cc.fillText(score1,100,50);
+		cc.fillText(score2, c.width -100,50);
+
+	}
+</script>
